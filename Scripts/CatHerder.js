@@ -42,7 +42,7 @@ var gameArea = {
 function startGame() {
     gameArea.start();
     cat = new buildCat(catSize, catSize, "blue", 10, 120);
-   // objective = new buildObjective(10, 10, "red");
+    objective = new buildObjective(10, 10, "red");
 }
 
 //BUILD CAT
@@ -94,7 +94,7 @@ function buildCat(width, height, colour, x, y) {
     }
     this.clicked = function() {
         var myleft = this.x - 5;
-        var myright = this.x + (this.width) + 10;
+        var myright = this.x + (this.width) + 10; //strange buffer needed?
         var mytop = this.y - 5;
         var mybottom = this.y + (this.height) + 10; //strange buffer for bottom distance?
         var clicked = true;
@@ -132,17 +132,17 @@ function buildCat(width, height, colour, x, y) {
     return this;
 }
 
-//function buildObjective(width, height, colour)
-//{
-//    this.width = width;
-//    this.height = height;
-//    this.x = randomBetween(1, gameArea.x);
-//    this.y = randomBetween(1, gameArea.y);
-//    this.update = function() {
-//        var context = gameArea.context;
-//        context.fillStyle = colour;
-//        context.fillRect(this.x, this.y, this.width, this.height);
-//}
+function buildObjective(width, height, colour) {
+    this.width = width;
+    this.height = height;
+    this.x = randomBetween(1, gameArea.x);
+    this.y = randomBetween(1, gameArea.y);
+    this.update = function () {
+        var context = gameArea.context;
+        context.fillStyle = colour;
+        context.fillRect(this.x, this.y, this.width, this.height);
+    }
+}
 
 function updateGameArea() 
 {
