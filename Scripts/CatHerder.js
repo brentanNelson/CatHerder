@@ -49,6 +49,7 @@ var gameArea = {
 
 function startGame() {
     score = 0;
+    catSpeed = 1;
     gameArea.start();
     cat = new buildCat(catSize, catSize, "blue", gameArea.canvas.width / 2, gameArea.canvas.height / 2);
     objective = new buildObjective(10, 10, "green");
@@ -87,21 +88,25 @@ function buildCat(width, height, colour, x, y) {
 
         this.changeXDirectionCounter++;
         this.changeYDirectionCounter++;
+        var myleft = this.x - 5;
+        var myright = this.x + (this.width) + 10; //strange buffer needed?
+        var mytop = this.y - 5;
+        var mybottom = this.y + (this.height) + 10; //strange buffer for bottom distance?
 
-        if (this.x > gameArea.canvas.width || this.x < 0) {
+        if (myright > gameArea.canvas.width || myleft <= 0) {
             this.xDirection = this.xDirection * -1;
             this.changeXDirectionCounter = 0;
         } else {
-            if (this.changeXDirectionCounter % changeDirectionInterval == 0) {
+            if (this.changeXDirectionCounter % changeDirectionInterval === 0) {
                 this.xDirection = randomBetween(-1, 1);
                 this.changeXDirectionCounter = randomBetween(0, changeDirectionInterval - 1);
             }
         }
-        if (this.y > gameArea.canvas.height || this.y < 0) {
-            this.yDirection = this.yDirection * -1
+        if (mybottom > gameArea.canvas.height || mytop <= 0) {
+            this.yDirection = this.yDirection * -1;
             this.changeYDirectionCounter = 0;
         } else {
-            if (this.changeYDirectionCounter % changeDirectionInterval == 0) {
+            if (this.changeYDirectionCounter % changeDirectionInterval === 0) {
                 this.yDirection = randomBetween(-1, 1);
                 this.changeYDirectionCounter = randomBetween(0, changeDirectionInterval - 1);
             }
@@ -206,7 +211,7 @@ function updateGameArea()
         windows[i].update();
     }
     speedIncreaseCounter++;
-    if (speedIncreaseCounter == speedIncreaseInterval && catSpeed < maxSpeed) {
+    if (speedIncreaseCounter === speedIncreaseInterval && catSpeed < maxSpeed) {
         catSpeed++;
         speedIncreaseCounter = 0;
     }
