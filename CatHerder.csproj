@@ -50,6 +50,19 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CatHerder.html" />
+    <Content Include="images\catrecolors.png" />
+    <Content Include="images\whitecat\white_down_1.png" />
+    <Content Include="images\whitecat\white_down_2.png" />
+    <Content Include="images\whitecat\white_down_3.png" />
+    <Content Include="images\whitecat\white_left_1.png" />
+    <Content Include="images\whitecat\white_left_2.png" />
+    <Content Include="images\whitecat\white_left_3.png" />
+    <Content Include="images\whitecat\white_right_1.png" />
+    <Content Include="images\whitecat\white_right_2.png" />
+    <Content Include="images\whitecat\white_right_3.png" />
+    <Content Include="images\whitecat\white_up_1.png" />
+    <Content Include="images\whitecat\white_up_2.png" />
+    <Content Include="images\whitecat\white_up_3.png" />
     <Content Include="Scripts\CatHerder.js" />
     <Content Include="Scripts\jquery-3.1.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.0.js" />

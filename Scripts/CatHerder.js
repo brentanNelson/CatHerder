@@ -76,16 +76,19 @@ function buildWindow(width, height, colour, x, y) {
 function buildCat(width, height, colour, x, y) {
     this.width = width;
     this.height = height;
+    this.catColour = 'white';
+    this.direction = 'down';
     this.xDirection = 1;
     this.yDirection = -1;
     this.changeXDirectionCounter = 0;
     this.changeYDirectionCounter = 0;
+    this.baseImage = new Image();
+    this.imageCounter = 1;
+    this.currentImageNumber = 1;
 
     this.x = x;
     this.y = y;
     this.update = function() {
-        var context = gameArea.context;
-
         this.changeXDirectionCounter++;
         this.changeYDirectionCounter++;
         var myleft = this.x - 5;
@@ -114,8 +117,30 @@ function buildCat(width, height, colour, x, y) {
 
         this.x += catSpeed * this.xDirection;
         this.y += catSpeed * this.yDirection;
-        context.fillStyle = colour;
-        context.fillRect(this.x, this.y, this.width, this.height);
+        this.drawCat();
+       // context.fillStyle = colour;
+       // context.fillRect(this.x, this.y, this.width, this.height);
+    }
+    this.drawCat = function()
+    {
+        var context = gameArea.context;
+        var imageSource = 'images/' + this.catColour + 'cat/' + this.catColour + '_' + calculateDirection(this.yDirection, this.xDirection, this.direction) + '_' + this.currentImageNumber + '.png';
+        var image = this.baseImage;
+        var imageX = this.x;
+        var imageY = this.y;
+        image.onload = function () {
+            context.drawImage(image, imageX, imageY);
+        }
+
+        image.src = imageSource;
+        this.imageCounter++;
+        if (this.imageCounter == 8) {
+            this.imageCounter = 1;
+            this.currentImageNumber++;
+            if (this.currentImageNumber == 4) {
+                this.currentImageNumber = 1;
+            }
+        }
     }
     this.collision = function(otherObj) {
         var myleft = this.x;
@@ -236,6 +261,47 @@ function toggleButton() {
     $("#startOver").toggle();
 }
 
+//CALCULATE DIRECTION
+function calculateDirection(ySpeed, xSpeed, currentDirection) {
+    switch (ySpeed) {
+        case 0:
+            if (xSpeed == 0) {
+                return currentDirection;
+            }
+            else if (xSpeed == -1) {
+                return 'left';
+            }
+            else {
+                return 'right';
+            }
+            break;
+        case -1:
+            if (xSpeed == 0) {
+                return 'up';
+            }
+            else if (xSpeed == -1) {
+                return 'left';
+            }
+            else {
+                return 'right';
+            }
+            break;
+        case 1:
+            if (xSpeed == 0) {
+                return 'down';
+            }
+            else if (xSpeed == -1) {
+                return 'left';
+            }
+            else {
+                return 'right';
+            }
+            break;
+        default:
+            return currentDirection;
+            break;
+    }
+}
 function newGame() {
     gameArea.clear();
     $("#score").html("Score: " + score);

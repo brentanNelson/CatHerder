@@ -1,0 +1,5 @@
+E:\Projects\CatHerder\bin\Debug\ClassLibrary.dll
+E:\Projects\CatHerder\bin\Debug\ClassLibrary.pdb
+E:\Projects\CatHerder\obj\Debug\CatHerder.csprojResolveAssemblyReference.cache
+E:\Projects\CatHerder\obj\Debug\ClassLibrary.dll
+E:\Projects\CatHerder\obj\Debug\ClassLibrary.pdb
