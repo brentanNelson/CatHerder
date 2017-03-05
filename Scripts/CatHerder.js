@@ -5,8 +5,8 @@ var score = 0;
 var scoreIncrement = 20;
 var windowWidth = 5;
 var windowHeight = 50;
-var catSize = 30;
-var catSpeed = 1;
+var catSize = 32;
+var catSpeed = 0;
 var maxSpeed = 20;
 var runSpeed = 1;
 var speedIncreaseCounter = 0;
@@ -49,7 +49,6 @@ var gameArea = {
 
 function startGame() {
     score = 0;
-    catSpeed = 1;
     gameArea.start();
     cat = new buildCat(catSize, catSize, "blue", gameArea.canvas.width / 2, gameArea.canvas.height / 2);
     objective = new buildObjective(10, 10, "green");
@@ -88,14 +87,14 @@ function buildCat(width, height, colour, x, y) {
 
     this.x = x;
     this.y = y;
-    this.update = function() {
+    this.update = function () {
         this.changeXDirectionCounter++;
         this.changeYDirectionCounter++;
         var myleft = this.x - 5;
         var myright = this.x + (this.width) + 10; //strange buffer needed?
         var mytop = this.y - 5;
         var mybottom = this.y + (this.height) + 10; //strange buffer for bottom distance?
-
+        
         if (myright > gameArea.canvas.width || myleft <= 0) {
             this.xDirection = this.xDirection * -1;
             this.changeXDirectionCounter = 0;
@@ -129,7 +128,15 @@ function buildCat(width, height, colour, x, y) {
         var imageX = this.x;
         var imageY = this.y;
         image.onload = function () {
+            gameArea.clear();
             context.drawImage(image, imageX, imageY);
+            objective.update();
+            for (var i = 0; i < windows.length; i++) {
+                if (cat.collision(windows[i])) {
+                    catEscaped();
+                }
+                windows[i].update();
+            }
         }
 
         image.src = imageSource;
@@ -214,9 +221,8 @@ function buildObjective(width, height, colour) {
     }
 }
 
-function updateGameArea() 
-{
-    gameArea.clear();
+function updateGameArea() {
+   // gameArea.clear();
     if (cat.collision(objective)) {
         objective.resetPosition();
         updateScore();
