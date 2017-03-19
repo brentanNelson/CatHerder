@@ -22,6 +22,7 @@ public class CatController : MonoBehaviour
     private int increaseSpeedCounter;
     private int collisionDelayCounter;
     private bool fleeing;
+    private bool escaped;
     private int fleeCounter;
 
     void Start()
@@ -34,6 +35,7 @@ public class CatController : MonoBehaviour
         changeVerticalDirectionCounter = 0;
         collisionDelayCounter = 0;
         fleeing = false;
+        escaped = false;
     }
 
     void FixedUpdate()
@@ -50,7 +52,10 @@ public class CatController : MonoBehaviour
         {
             fleeing = false;
             velocity = velocity * speed;
-            ChangeDirection();
+            if (!escaped)
+            {
+                ChangeDirection();
+            }
         }
 
         rb2d.velocity = velocity;
@@ -87,18 +92,22 @@ public class CatController : MonoBehaviour
         if (collision.gameObject.CompareTag("Wall") && collisionDelayCounter > collisionDelay)
         {
             //reverse direction and reset counter
-            horizontalDirection = ReverseDirection(horizontalDirection);
-            verticalDirection = ReverseDirection(verticalDirection);
+            if (!escaped)
+            {
+                horizontalDirection = ReverseDirection(horizontalDirection);
+                verticalDirection = ReverseDirection(verticalDirection);
 
-            collisionDelayCounter = 0;
-            ResetDirectionCounters();
+                collisionDelayCounter = 0;
+                ResetDirectionCounters();
+            }
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.CompareTag("Window"))
+        if(collision.gameObject.CompareTag("EscapeTrigger"))
         {
+             escaped = true;
             //ADD LOSE CONDITION
         }
     }
@@ -177,31 +186,30 @@ public class CatController : MonoBehaviour
             {
                 animator.SetInteger("Direction", 2);
             }
-
-            //1 values
-            //right
-            else if (horizontalDirection == 1 && verticalDirection == 1)
-            {
-                animator.SetInteger("Direction", 3);
-            }
-            else if (horizontalDirection == -1 && verticalDirection == 1)
-            {
-                animator.SetInteger("Direction", 1);
-            }
             //Up
-            else if (verticalDirection == 1 && horizontalDirection < 1)
+            else if (verticalDirection == 1)
             {
                 animator.SetInteger("Direction", 2);
             }
-
-            //-1 values
-            //left 
-
             //down
-            else if (verticalDirection == -1 && horizontalDirection < 1)
+            else if (verticalDirection == -1)
             {
                 animator.SetInteger("Direction", 0);
             }
+
+            //1 values
+            //right
+            else if (horizontalDirection == 1)
+            {
+                animator.SetInteger("Direction", 3);
+            }
+            //left
+            else if (horizontalDirection == -1)
+            {
+                animator.SetInteger("Direction", 1);
+            }
+
+
         }
     }
 
