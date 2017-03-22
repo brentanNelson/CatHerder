@@ -1,17 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CatController : MonoBehaviour
 {
 
     public float speed;
+    public float stageSize;
     public int changeDirectionInterval;
     public int increaseSpeedInterval;
     public int collisionDelay;
     public int fleeDuration;
     public float fleeSpeedIncrease;
 
+    public Text ScoreText;
+    public Text LoseText;
     private Rigidbody2D rb2d;
     private Animator animator;
 
@@ -25,6 +29,8 @@ public class CatController : MonoBehaviour
     private bool escaped;
     private int fleeCounter;
 
+    private int score;
+
     void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();
@@ -36,6 +42,9 @@ public class CatController : MonoBehaviour
         collisionDelayCounter = 0;
         fleeing = false;
         escaped = false;
+        score = 0;
+
+        UpdateScoreText();
     }
 
     void FixedUpdate()
@@ -108,7 +117,15 @@ public class CatController : MonoBehaviour
         if(collision.gameObject.CompareTag("EscapeTrigger"))
         {
              escaped = true;
+
+            LoseText.text = "Cat Escaped! \r\n You Lose!";
             //ADD LOSE CONDITION
+        }
+        else if (collision.gameObject.CompareTag("Objective"))
+        {
+            collision.gameObject.transform.position = new Vector2(Random.Range(stageSize * -1, stageSize), Random.Range(stageSize * -1, stageSize));
+            score++;
+            UpdateScoreText();
         }
     }
 
@@ -222,5 +239,10 @@ public class CatController : MonoBehaviour
     {
         changeHorizontalDirectionCounter = 0;
         changeVerticalDirectionCounter = 0;
+    }
+
+    private void UpdateScoreText()
+    {
+        ScoreText.text = "Score: " + score;
     }
 }
