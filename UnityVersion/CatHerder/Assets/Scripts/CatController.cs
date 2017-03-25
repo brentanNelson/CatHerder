@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class CatController : MonoBehaviour
 {
@@ -12,10 +13,12 @@ public class CatController : MonoBehaviour
     public int increaseSpeedInterval;
     public int collisionDelay;
     public int fleeDuration;
+    public int scoreMultiplierValue;
     public float fleeSpeedIncrease;
 
     public Text ScoreText;
     public Text LoseText;
+    public Button TryAgainBtn;
     private Rigidbody2D rb2d;
     private Animator animator;
 
@@ -28,6 +31,7 @@ public class CatController : MonoBehaviour
     private bool fleeing;
     private bool escaped;
     private int fleeCounter;
+    private int scoreMultiplier;
 
     private int score;
 
@@ -43,6 +47,8 @@ public class CatController : MonoBehaviour
         fleeing = false;
         escaped = false;
         score = 0;
+        scoreMultiplier = scoreMultiplierValue;
+        TryAgainBtn.gameObject.SetActive(false);
 
         UpdateScoreText();
     }
@@ -79,6 +85,10 @@ public class CatController : MonoBehaviour
 
         increaseSpeedCounter++;
         collisionDelayCounter++;
+        if (scoreMultiplier > 1)
+        {
+            scoreMultiplier--;
+        }
     }
 
     private void OnMouseDown()
@@ -119,12 +129,14 @@ public class CatController : MonoBehaviour
              escaped = true;
 
             LoseText.text = "Cat Escaped! \r\n You Lose!";
-            //ADD LOSE CONDITION
+            TryAgainBtn.gameObject.SetActive(true);
+            TryAgainBtn.onClick.AddListener(RestartGame); 
         }
         else if (collision.gameObject.CompareTag("Objective"))
         {
             collision.gameObject.transform.position = new Vector2(Random.Range(stageSize * -1, stageSize), Random.Range(stageSize * -1, stageSize));
-            score++;
+            score = score + scoreMultiplier;
+            scoreMultiplier = scoreMultiplierValue;
             UpdateScoreText();
         }
     }
@@ -244,5 +256,10 @@ public class CatController : MonoBehaviour
     private void UpdateScoreText()
     {
         ScoreText.text = "Score: " + score;
+    }
+
+    private void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
