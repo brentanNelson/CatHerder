@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
@@ -89,6 +87,16 @@ public class CatController : MonoBehaviour
         {
             scoreMultiplier--;
         }
+
+
+        //for phones
+        var fingerCount = 0;
+        foreach (Touch touch in Input.touches)
+        {
+            if (touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled)
+                OnTap(touch);
+
+        }
     }
 
     private void OnMouseDown()
@@ -102,6 +110,21 @@ public class CatController : MonoBehaviour
 
         horizontalDirection = mousePosition.x > midX ? -1 : 1;
         verticalDirection = mousePosition.y > midY ? -1 : 1;
+
+        ResetDirectionCounters();
+    }
+
+    private void OnTap(Touch touch)
+    {
+        var tapPosition = touch.position;
+
+        fleeing = true;
+        fleeCounter = 0;
+        var midX = rb2d.position.x + 0.3;
+        var midY = rb2d.position.y + 0.3;
+
+        horizontalDirection = tapPosition.x > midX ? -1 : 1;
+        verticalDirection = tapPosition.y > midY ? -1 : 1;
 
         ResetDirectionCounters();
     }
