@@ -31,7 +31,7 @@ public class CatController : MonoBehaviour
     private int fleeCounter;
     private int scoreMultiplier;
 
-    private int score;
+    private string score;
 
     void Start()
     {
@@ -44,7 +44,7 @@ public class CatController : MonoBehaviour
         collisionDelayCounter = 0;
         fleeing = false;
         escaped = false;
-        score = 0;
+        score = "0";
         scoreMultiplier = scoreMultiplierValue;
         TryAgainBtn.gameObject.SetActive(false);
 
@@ -93,8 +93,12 @@ public class CatController : MonoBehaviour
         var fingerCount = 0;
         foreach (Touch touch in Input.touches)
         {
+            score += "Touch Detected\r\n";
+            UpdateScoreText();
             if (touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled)
+            {
                 OnTap(touch);
+            }
 
         }
     }
@@ -116,17 +120,34 @@ public class CatController : MonoBehaviour
 
     private void OnTap(Touch touch)
     {
-        var tapPosition = touch.position;
+        score += "Entering OnTap @ "+touch.position+"\r\n";
+        UpdateScoreText();
+        var tapPosition = Camera.main.ScreenToWorldPoint(touch.position);
+        var tapPosition2d = new Vector2(tapPosition.x, tapPosition.y);
+        var hit = Physics2D.Raycast(tapPosition2d, Camera.main.transform.forward);
 
-        fleeing = true;
-        fleeCounter = 0;
-        var midX = rb2d.position.x + 0.3;
-        var midY = rb2d.position.y + 0.3;
+        if (hit.collider != null)
+        {
+            score = "collider isnt nullr\n";
+            var touchedObject = hit.transform.gameObject;
+            score += touchedObject.name;
+            score += touchedObject.tag;
 
-        horizontalDirection = tapPosition.x > midX ? -1 : 1;
-        verticalDirection = tapPosition.y > midY ? -1 : 1;
+            if (hit.collider.tag == "Cat")
+            {
+                score += "Cat Fleeing!r\n";
 
-        ResetDirectionCounters();
+                fleeing = true;
+                fleeCounter = 0;
+                var midX = rb2d.position.x + 0.3;
+                var midY = rb2d.position.y + 0.3;
+
+                horizontalDirection = tapPosition.x > midX ? -1 : 1;
+                verticalDirection = tapPosition.y > midY ? -1 : 1;
+
+                ResetDirectionCounters();
+            }
+        }      
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
